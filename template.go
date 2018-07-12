@@ -19,6 +19,7 @@ func GetTemplateText(path string) (string, error) {
 func GenerateTemplate(templ, name string, data interface{}) (string, error) {
 	funcMap := template.FuncMap{
 		"ToUpper": strings.ToUpper,
+		"ToLower": strings.ToLower,
 	}
 	buf := bytes.NewBufferString("")
 	if messageTempl, err := template.New(name).Funcs(funcMap).Parse(templ); err != nil {
