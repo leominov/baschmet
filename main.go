@@ -7,15 +7,15 @@ import (
 )
 
 func realMain(dryRun bool) int {
-	options, err := OptionsFromFile("options.yaml")
-	if err != nil {
-		fmt.Println(err)
-		return 1
-	}
 	args := os.Args[1:]
 	if len(args) == 0 {
 		fmt.Println("Nothing to do.")
 		return 0
+	}
+	options, err := OptionsFromFile("options.yaml")
+	if err != nil {
+		fmt.Println(err)
+		return 1
 	}
 	baschmet := &Baschmet{
 		Options: options,
