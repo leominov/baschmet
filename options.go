@@ -9,7 +9,6 @@ import (
 type Options struct {
 	HelmVersion               string                 `yaml:"helmVersion"`
 	NodeVersion               string                 `yaml:"nodeVersion"`
-	MetaChartVersion          string                 `yaml:"metaChartVersion"`
 	PushDockerImageWithLatest bool                   `yaml:"pushDockerImageWithLatest"`
 	GoogleCloudSDKVersion     string                 `yaml:"googleCloudSDKVersion"`
 	BaseURLDomain             string                 `yaml:"baseURLDomain"`
