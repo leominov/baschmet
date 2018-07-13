@@ -12,8 +12,9 @@ type Options struct {
 	MetaChartVersion          string          `yaml:"metaChartVersion"`
 	PushDockerImageWithLatest bool            `yaml:"pushDockerImageWithLatest"`
 	GoogleCloudSDKVersion     string          `yaml:"googleCloudSDKVersion"`
-	PublicHostname            string          `yaml:"publicHostname"`
-	PublicProtocol            string          `yaml:"publicProtocol"`
+	BaseURLDomain             string          `yaml:"baseURLDomain"`
+	BaseURLProtocol           string          `yaml:"baseURLProtocol"`
+	PublicHelmRepo            bool            `yaml:"publicHelmRepo"`
 	StaticQAEnvironments      []string        `yaml:"staticQAEnvironments"`
 	DynamicEnvironments       bool            `yaml:"dynamicEnvironments"`
 	DisabledServiceTestsRaw   []string        `yaml:"disabledServiceTests"`
