@@ -11,6 +11,7 @@ type Options struct {
 	NodeVersion               string          `yaml:"nodeVersion"`
 	MetaChartVersion          string          `yaml:"metaChartVersion"`
 	PushDockerImageWithLatest bool            `yaml:"pushDockerImageWithLatest"`
+	GoogleCloudSDKVersion     string          `yaml:"googleCloudSDKVersion"`
 	PublicHostname            string          `yaml:"publicHostname"`
 	PublicProtocol            string          `yaml:"publicProtocol"`
 	StaticQAEnvironments      []string        `yaml:"staticQAEnvironments"`
