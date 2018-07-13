@@ -15,7 +15,7 @@ type Options struct {
 	BaseURLDomain             string                 `yaml:"baseURLDomain"`
 	BaseURLProtocol           string                 `yaml:"baseURLProtocol"`
 	PublicHelmRepo            bool                   `yaml:"publicHelmRepo"`
-	StaticQAEnvironments      []string               `yaml:"staticQAEnvironments"`
+	StaticEnvironments        []string               `yaml:"staticEnvironments"`
 	DynamicEnvironments       bool                   `yaml:"dynamicEnvironments"`
 	DisabledServiceTestsRaw   []string               `yaml:"disabledServiceTests"`
 	Custom                    map[string]interface{} `yaml:"custom"`
