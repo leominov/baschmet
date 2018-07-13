@@ -7,18 +7,20 @@ import (
 )
 
 type Options struct {
-	HelmVersion               string          `yaml:"helmVersion"`
-	NodeVersion               string          `yaml:"nodeVersion"`
-	MetaChartVersion          string          `yaml:"metaChartVersion"`
-	PushDockerImageWithLatest bool            `yaml:"pushDockerImageWithLatest"`
-	GoogleCloudSDKVersion     string          `yaml:"googleCloudSDKVersion"`
-	BaseURLDomain             string          `yaml:"baseURLDomain"`
-	BaseURLProtocol           string          `yaml:"baseURLProtocol"`
-	PublicHelmRepo            bool            `yaml:"publicHelmRepo"`
-	StaticQAEnvironments      []string        `yaml:"staticQAEnvironments"`
-	DynamicEnvironments       bool            `yaml:"dynamicEnvironments"`
-	DisabledServiceTestsRaw   []string        `yaml:"disabledServiceTests"`
-	DisabledServiceTests      map[string]bool `yaml:"-"`
+	HelmVersion               string                 `yaml:"helmVersion"`
+	NodeVersion               string                 `yaml:"nodeVersion"`
+	MetaChartVersion          string                 `yaml:"metaChartVersion"`
+	PushDockerImageWithLatest bool                   `yaml:"pushDockerImageWithLatest"`
+	GoogleCloudSDKVersion     string                 `yaml:"googleCloudSDKVersion"`
+	BaseURLDomain             string                 `yaml:"baseURLDomain"`
+	BaseURLProtocol           string                 `yaml:"baseURLProtocol"`
+	PublicHelmRepo            bool                   `yaml:"publicHelmRepo"`
+	StaticQAEnvironments      []string               `yaml:"staticQAEnvironments"`
+	DynamicEnvironments       bool                   `yaml:"dynamicEnvironments"`
+	DisabledServiceTestsRaw   []string               `yaml:"disabledServiceTests"`
+	Custom                    map[string]interface{} `yaml:"custom"`
+	GeneratedBy               string                 `yaml:"generatedBy"`
+	DisabledServiceTests      map[string]bool        `yaml:"-"`
 }
 
 func OptionsFromFile(pat string) (*Options, error) {
