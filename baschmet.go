@@ -6,6 +6,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 const (
@@ -70,6 +72,7 @@ func (b *Baschmet) ProcessFiles(rootDir, templatesDir string, vars *Variables) e
 	if err != nil {
 		return err
 	}
+	dmp := diffmatchpatch.New()
 	for _, templFile := range templFiles {
 		relPath := strings.TrimPrefix(templFile, templatesDir)
 		resultPath := path.Join(rootDir, relPath)
@@ -82,8 +85,16 @@ func (b *Baschmet) ProcessFiles(rootDir, templatesDir string, vars *Variables) e
 		if err != nil {
 			return err
 		}
+		originalText, err := GetTemplateText(resultPath)
+		if err == nil {
+			if originalText == text {
+				fmt.Println("nothing changed.")
+				continue
+			}
+			diffs := dmp.DiffMain(originalText, text, true)
+			fmt.Println(dmp.DiffPrettyText(diffs))
+		}
 		if b.DryRun {
-			fmt.Println(text)
 			continue
 		}
 		err = ioutil.WriteFile(resultPath, []byte(text), 0644)

@@ -6,21 +6,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-type Options struct {
-	HelmVersion               string                 `yaml:"helmVersion"`
-	NodeVersion               string                 `yaml:"nodeVersion"`
-	PushDockerImageWithLatest bool                   `yaml:"pushDockerImageWithLatest"`
-	GoogleCloudSDKVersion     string                 `yaml:"googleCloudSDKVersion"`
-	BaseURLDomain             string                 `yaml:"baseURLDomain"`
-	BaseURLProtocol           string                 `yaml:"baseURLProtocol"`
-	PublicHelmRepo            bool                   `yaml:"publicHelmRepo"`
-	StaticEnvironments        []string               `yaml:"staticEnvironments"`
-	DynamicEnvironments       bool                   `yaml:"dynamicEnvironments"`
-	DisabledServiceTestsRaw   []string               `yaml:"disabledServiceTests"`
-	Custom                    map[string]interface{} `yaml:"custom"`
-	GeneratedBy               string                 `yaml:"generatedBy"`
-	DisabledServiceTests      map[string]bool        `yaml:"-"`
-}
+type Options map[string]interface{}
 
 func OptionsFromFile(pat string) (*Options, error) {
 	b, err := ioutil.ReadFile(pat)
@@ -31,10 +17,6 @@ func OptionsFromFile(pat string) (*Options, error) {
 	yaml.Unmarshal(b, &options)
 	if err != nil {
 		return nil, err
-	}
-	options.DisabledServiceTests = make(map[string]bool)
-	for _, service := range options.DisabledServiceTestsRaw {
-		options.DisabledServiceTests[service] = true
 	}
 	return options, nil
 }
