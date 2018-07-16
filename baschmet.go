@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	templatesDir = "templates/"
-	chartFile    = "Chart.yaml"
-	metaFile     = "meta.yaml"
+	templatesDir     = "templates/"
+	chartFile        = "Chart.yaml"
+	metaFile         = "meta.yaml"
+	squareDelimsFile = ".DELIMS_SQUARE"
 )
 
 type Baschmet struct {
@@ -67,21 +68,40 @@ func (b *Baschmet) GetChartVariables(chartDir string) (*Variables, error) {
 	}, nil
 }
 
+func HasSquareDelimsFile(directory string) bool {
+	filePath := path.Join(directory, squareDelimsFile)
+	if _, err := ioutil.ReadFile(filePath); err != nil {
+		return false
+	}
+	return true
+}
+
 func (b *Baschmet) ProcessFiles(rootDir, templatesDir string, vars *Variables) error {
 	templFiles, err := FilePathWalkDir(templatesDir)
 	if err != nil {
 		return err
 	}
 	dmp := diffmatchpatch.New()
-	for _, templFile := range templFiles {
-		relPath := strings.TrimPrefix(templFile, templatesDir)
-		resultPath := path.Join(rootDir, relPath)
-		fmt.Println(resultPath)
-		templ, err := GetTemplateText(templFile)
+	for _, templFileRaw := range templFiles {
+		if path.Base(templFileRaw) == squareDelimsFile {
+			continue
+		}
+		templFile, err := GenerateTemplate(templFileRaw, "path", vars, false)
 		if err != nil {
 			return err
 		}
-		text, err := GenerateTemplate(templ, "templ", vars)
+		relPath := strings.TrimPrefix(templFile, templatesDir)
+		resultPath := path.Join(rootDir, relPath)
+		fmt.Println(resultPath)
+		templ, err := GetTemplateText(templFileRaw)
+		if err != nil {
+			return err
+		}
+		var squareDelims bool
+		if HasSquareDelimsFile(path.Dir(templFileRaw)) {
+			squareDelims = true
+		}
+		text, err := GenerateTemplate(templ, "templ", vars, squareDelims)
 		if err != nil {
 			return err
 		}
