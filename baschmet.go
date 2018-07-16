@@ -81,7 +81,7 @@ func (b *Baschmet) ProcessFiles(rootDir, templatesDir string, vars *Variables) e
 		if err != nil {
 			return err
 		}
-		text, err := GenerateTemplate(templ, "gitlab", vars)
+		text, err := GenerateTemplate(templ, "templ", vars)
 		if err != nil {
 			return err
 		}
