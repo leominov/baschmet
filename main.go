@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func realMain(dryRun bool) int {
+func realMain(dryRun, incChartVersion bool) int {
 	args := os.Args[1:]
 	if len(args) == 0 {
 		fmt.Println("Nothing to do.")
@@ -18,9 +18,10 @@ func realMain(dryRun bool) int {
 		return 1
 	}
 	baschmet := &Baschmet{
-		Options: options,
-		DryRun:  dryRun,
-		Charts:  args,
+		Options:         options,
+		DryRun:          dryRun,
+		IncChartVersion: incChartVersion,
+		Charts:          args,
 	}
 	err = baschmet.Start()
 	if err != nil {
@@ -30,18 +31,31 @@ func realMain(dryRun bool) int {
 	return 0
 }
 
-func main() {
-	var dryRun bool
-	dryRunRaw := os.Getenv("DRY_RUN")
-	if len(dryRunRaw) == 0 {
-		dryRun = true
+func parseBoolEnv(env string, def bool) (bool, error) {
+	var result bool
+	resultRaw := os.Getenv(env)
+	if len(resultRaw) == 0 {
+		result = def
 	} else {
-		b, err := strconv.ParseBool(dryRunRaw)
+		b, err := strconv.ParseBool(resultRaw)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return false, err
 		}
-		dryRun = b
+		result = b
 	}
-	os.Exit(realMain(dryRun))
+	return result, nil
+}
+
+func main() {
+	dryRun, err := parseBoolEnv("DRY_RUN", true)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	incChartVersion, err := parseBoolEnv("INC_CHART_VERSION", false)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	os.Exit(realMain(dryRun, incChartVersion))
 }

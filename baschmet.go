@@ -18,9 +18,10 @@ const (
 )
 
 type Baschmet struct {
-	DryRun  bool
-	Charts  []string
-	Options *Options
+	DryRun          bool
+	IncChartVersion bool
+	Charts          []string
+	Options         *Options
 }
 
 func (b *Baschmet) Start() error {
@@ -55,6 +56,12 @@ func (b *Baschmet) GetChartVariables(chartDir string) (*Variables, error) {
 	chart, err := ChartFromFile(chartFile)
 	if err != nil {
 		return nil, err
+	}
+	if b.IncChartVersion {
+		chart.IncPatch()
+		if err := chart.Save(); err != nil {
+			return nil, err
+		}
 	}
 	metaFile := path.Join(chartDir, "..", metaFile)
 	meta, err := MetaFromFile(metaFile)
