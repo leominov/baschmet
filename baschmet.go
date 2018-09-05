@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
@@ -18,13 +19,23 @@ const (
 )
 
 type Baschmet struct {
-	DryRun          bool
-	IncChartVersion bool
-	Charts          []string
-	Options         *Options
+	DryRun            bool
+	IncChartVersion   bool
+	Charts            []string
+	Options           *Options
+	SquareDelimsFiles map[string]bool
 }
 
 func (b *Baschmet) Start() error {
+	b.SquareDelimsFiles = make(map[string]bool)
+
+	if val, ok := (*b.Options)["SquareDelimsFiles"]; ok {
+		files := val.([]interface{})
+		for _, filename := range files {
+			b.SquareDelimsFiles[filename.(string)] = true
+		}
+	}
+
 	for _, chartDir := range b.Charts {
 		err := b.ProcessChart(chartDir)
 		if err != nil {
@@ -99,18 +110,20 @@ func (b *Baschmet) ProcessFiles(rootDir, templatesDir string, vars *Variables) e
 		}
 		relPath := strings.TrimPrefix(templFile, templatesDir)
 		resultPath := path.Join(rootDir, relPath)
-		fmt.Println(resultPath)
 		templ, err := GetTemplateText(templFileRaw)
 		if err != nil {
 			return err
 		}
 		var squareDelims bool
+		if _, ok := b.SquareDelimsFiles[filepath.Base(templFileRaw)]; ok {
+			squareDelims = true
+		}
 		if HasSquareDelimsFile(path.Dir(templFileRaw)) {
 			squareDelims = true
 		}
 		text, err := GenerateTemplate(templ, "templ", vars, squareDelims)
 		if err != nil {
-			return err
+			return fmt.Errorf("Error processing %s: %v", templFileRaw, err)
 		}
 		originalText, err := GetTemplateText(resultPath)
 		if err == nil {
